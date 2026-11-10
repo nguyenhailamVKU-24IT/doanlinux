@@ -1,0 +1,9 @@
+{% extends "base.html" %}{% block content %}
+<div class="hero-row"><div><p class="lede">{{ description }}</p><div class="demo-hint"><span>🎤</span><div><strong>Gợi ý nói khi demo</strong><small>{{ demo_hint }}</small></div></div></div><div class="monitor-status" id="monitorStatus"><span class="status-pill unknown">CHƯA ĐỦ DỮ LIỆU</span></div></div>
+<div class="page-error" id="pageError" hidden></div>
+<div class="action-strip"><div><strong>Thao tác trình diễn</strong><small>Nhấn kiểm tra để đọc lại dữ liệu thật từ Ubuntu ngay lúc này.</small></div><div class="action-buttons"><button class="refresh-button" id="checkNow">Kiểm tra ngay</button><button class="ghost-button" id="explainButton">Giải thích kết quả</button><button class="ghost-button" id="toggleRaw">Xem JSON</button></div></div>
+<div class="explanation-box" id="explanationBox" hidden></div>
+<div class="permission-note" id="permissionNote" hidden></div>
+<div class="content-grid monitor-grid"><section class="panel primary-panel"><div class="panel-head"><div><span class="section-kicker">LIVE READOUT</span><h3>{{ panel_title }}</h3></div><span class="panel-dot"></span></div><div id="monitorMain" class="data-stack"><div class="skeleton"></div><div class="skeleton short"></div></div></section><section class="panel side-panel"><div class="panel-head"><div><span class="section-kicker">READ-ONLY</span><h3>Ý nghĩa kiểm tra</h3></div></div><p class="panel-copy">{{ explainer }}</p><div class="safe-note"><span>◉</span><div><strong>Không thay đổi hệ thống</strong><small>Dashboard chỉ đọc trạng thái hiện tại.</small></div></div></section></div>
+<div class="panel raw-panel" id="rawPanel" hidden><div class="panel-head"><div><span class="section-kicker">DETAILS</span><h3>Chi tiết kỹ thuật</h3></div><button class="ghost-button" id="copyJson">Sao chép JSON</button></div><pre id="rawData">Đang chờ dữ liệu…</pre></div>
+{% endblock %}
