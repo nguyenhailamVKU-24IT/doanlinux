@@ -1,10 +1,4 @@
+.venv/
 __pycache__/
 *.py[cod]
-.venv/
-venv/
-.env
-.env.*
-!.env.example
-.DS_Store
-*.pem
-*.key
+evidence/

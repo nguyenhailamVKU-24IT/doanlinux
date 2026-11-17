@@ -5,7 +5,7 @@ Dashboard web read-only cho đồ án Ubuntu Security Project. Website chạy b�
 ## 1. Cài đặt trên Ubuntu VM
 
 ```bash
-cd "/home/NguyenHaiLam/Desktop/Đồ Án Linux/Ubuntu_Security_Project"
+cd doanlinux-main
 python3 -m venv .venv
 . .venv/bin/activate
 python -m pip install -r requirements.txt
@@ -26,7 +26,7 @@ Không chạy Flask bằng `sudo`. Launcher chỉ yêu cầu xác thực sudo m�
 Sau khi cài `.venv` và Flask, chạy một lần, không dùng sudo:
 
 ```bash
-./web_dashboard/install_desktop_launcher.sh
+./install_desktop_launcher.sh
 ```
 
 Nhấn chuột phải icon **Ubuntu Security Dashboard** trên Desktop → **Allow Launching / Cho phép khởi chạy**, rồi nhấn đúp icon. Launcher sử dụng `.venv` trong dự án, mở Terminal và yêu cầu trình duyệt mở website. Giữ Terminal mở; `Ctrl+C` để dừng. Nếu browser mở trước khi server sẵn sàng, đợi dòng `Running on` rồi tải lại trang. Nếu port 5000 đang được sử dụng, kiểm tra Terminal đang chạy trước đó; không nhấn mở nhiều lần.
@@ -35,12 +35,12 @@ Khi launcher hỏi mật khẩu sudo, nhập một lần để đọc SSH, UFW, 
 
 Icon trỏ tới vị trí dự án hiện tại. Nếu di chuyển thư mục dự án, chạy lại script cài icon. Script không cài package, không dùng sudo, không sửa firewall.
 
-Kịch bản trình bày: `docs/13-dashboard-demo.md`.
+Các testcase TC01–TC08 nằm trong `tests/test_cases.csv`; trạng thái ban đầu là UNKNOWN cho đến khi có minh chứng từ máy lab.
 
 ### Chạy bằng Terminal
 
 ```bash
-./web_dashboard/run_dashboard.sh
+./run_dashboard.sh
 ```
 
 Mặc định website chỉ bind vào `127.0.0.1:5000` và tắt debug, phù hợp trình diễn trên chính Ubuntu VM. Truy cập bằng trình duyệt trong Ubuntu:
@@ -52,7 +52,7 @@ http://127.0.0.1:5000
 Để xem từ macOS qua Parallels, chỉ dùng khi đã hiểu rủi ro mạng lab và tự bind vào địa chỉ cần thiết:
 
 ```bash
-DASHBOARD_HOST=0.0.0.0 DASHBOARD_PORT=5000 ./web_dashboard/run_dashboard.sh
+DASHBOARD_HOST=0.0.0.0 DASHBOARD_PORT=5000 ./run_dashboard.sh
 ```
 
 Không mở port 5000 trên UFW chỉ để demo nếu không cần. Nếu cần truy cập từ Mac, hãy mở rule tạm thời theo quy trình lab rồi xóa sau khi trình diễn.
@@ -80,14 +80,14 @@ python3 -m unittest discover -s tests_web -p 'test_*.py' -v
 Kiểm tra cú pháp:
 
 ```bash
-python3 -m py_compile web_dashboard/*.py
-bash -n web_dashboard/run_dashboard.sh
+python3 -m py_compile app.py collector.py audit.py
+bash -n run_dashboard.sh
 ```
 
 Nếu đã cài dependency, smoke test Flask:
 
 ```bash
-python3 -m web_dashboard.app --host 127.0.0.1 --port 5000
+python3 -m app --host 127.0.0.1 --port 5000
 curl http://127.0.0.1:5000/api/health
 ```
 
@@ -99,4 +99,16 @@ curl http://127.0.0.1:5000/api/health
 - Dashboard không chạy root, không sửa cấu hình, không cài package và không tự động remediation.
 - `UNKNOWN` có nghĩa là thiếu quyền, thiếu công cụ hoặc không đọc được dữ liệu; không được diễn giải thành PASS.
 - Nội dung `/srv/security-lab/secret.txt` không bao giờ được đọc hoặc gửi ra API.
-- Các script terminal gốc trong `scripts/`, `01_scripts/` vẫn chạy độc lập.
+- `scripts/security_audit.sh` tạo báo cáo JSON dạng text từ collector, không thay đổi cấu hình hệ thống.
+
+## 6. Phát triển trên cloud hoặc máy không có systemd
+
+Yêu cầu Python 3.10 trở lên. Cài dependency theo mục 1, sau đó chạy không cần sudo:
+
+```bash
+.venv/bin/python -m app --host 127.0.0.1 --port 5000
+```
+
+SSH, UFW, Fail2ban và file lab có thể không tồn tại trong container. Khi thiếu dữ liệu, UNKNOWN là kết quả hợp lệ; dashboard không cài hoặc bật các dịch vụ này. Launcher dành cho Ubuntu yêu cầu sudo để đọc thông tin đầy đủ.
+
+Chạy kiểm thử bằng `.venv/bin/python -m unittest discover -s tests_web -v`. Chạy audit bằng `bash scripts/security_audit.sh` hoặc nút trên trang Reports. Báo cáo nằm trong `evidence/security_reports/` và không được đưa vào Git. Tạo được báo cáo không đồng nghĩa baseline bảo mật đạt PASS.

@@ -15,7 +15,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Callable, Iterable
 
-PROJECT_ROOT = Path(__file__).resolve().parents[1]
+PROJECT_ROOT = Path(__file__).resolve().parent
 REPORT_DIR = PROJECT_ROOT / "evidence" / "security_reports"
 LOG_DIR = PROJECT_ROOT / "evidence" / "logs"
 TEST_CASES_FILE = PROJECT_ROOT / "tests" / "test_cases.csv"
@@ -101,7 +101,7 @@ class SafeCommandRunner:
         except (FileNotFoundError, PermissionError, OSError) as exc:
             return CommandResult(command, 127, "", str(exc))
         except subprocess.TimeoutExpired as exc:
-            return CommandResult(command, 124, exc.stdout or "", exc.stderr or "", timed_out=True)
+            return CommandResult(command, 124, (exc.stdout.decode(errors="replace") if isinstance(exc.stdout, bytes) else exc.stdout) or "", (exc.stderr.decode(errors="replace") if isinstance(exc.stderr, bytes) else exc.stderr) or "", timed_out=True)
 
     @staticmethod
     def _looks_privileged(result: CommandResult) -> bool:
@@ -132,7 +132,7 @@ class SafeCommandRunner:
         except (FileNotFoundError, PermissionError, OSError) as exc:
             return CommandResult(command, 127, "", str(exc))
         except subprocess.TimeoutExpired as exc:
-            return CommandResult(command, 124, exc.stdout or "", exc.stderr or "", timed_out=True)
+            return CommandResult(command, 124, (exc.stdout.decode(errors="replace") if isinstance(exc.stdout, bytes) else exc.stdout) or "", (exc.stderr.decode(errors="replace") if isinstance(exc.stderr, bytes) else exc.stderr) or "", timed_out=True)
 
 
 def now_iso() -> str:
@@ -162,7 +162,7 @@ def status(value: str | None, *, expected: Iterable[str] = ("active", "enabled",
 def result_value(result: CommandResult) -> str | None:
     if result.returncode == 127 and not result.stdout:
         return None
-    return first_line(result.stdout)
+    return first_line(result.stdout) or None
 
 
 def redact_ips(raw: str) -> list[str]:
@@ -342,7 +342,7 @@ def collect_snapshot(runner: SafeCommandRunner | None = None) -> dict:
             "warning": permission_warning(results, ("ssh_service", "ssh_enabled", "ssh_config", "ssh_validate")),
         },
         "ufw": {**ufw, "warning": permission_warning(results, ("ufw_status",))},
-        "fail2ban": {"status": fail2ban_status, "service": service_f2b, **fail2ban, "warning": permission_warning(results, ("fail2ban_service", "fail2ban_status", "fail2ban_sshd"))},
+        "fail2ban": {**fail2ban, "status": fail2ban_status, "service": service_f2b, "warning": permission_warning(results, ("fail2ban_service", "fail2ban_status", "fail2ban_sshd"))},
         "permissions": {**permissions, "warning": permission_warning(results, ("testuser_read",))},
         "updates": updates,
         "commands": {key: " ".join(shlex.quote(part) for part in runner.command_for(key)) for key in runner.registry},

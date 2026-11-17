@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -Eeuo pipefail
 
-project_dir=$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)
+project_dir=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
 cd "$project_dir"
 
 fail() {
@@ -54,4 +54,4 @@ printf 'Giu cua so nay mo khi demo. Nhan Ctrl+C de dung website.\n\n'
   fi
 ) &
 
-exec "$project_dir/.venv/bin/python" -m web_dashboard.app --host "$host" --port "$port"
+exec "$project_dir/.venv/bin/python" -m app --host "$host" --port "$port"

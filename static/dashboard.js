@@ -83,6 +83,7 @@
   };
   const loadTests = async () => { try { renderTests(await api("/api/tests")); setUpdated(new Date().toISOString()); } catch (error) { toast(error.message); } };
   $("#copyJson")?.addEventListener("click", async () => { try { await navigator.clipboard.writeText($("#rawData").textContent); toast("Đã sao chép JSON"); } catch (_) { toast("Trình duyệt không cho phép sao chép"); } });
-  const loadPage = async () => { if (page === "dashboard") { try { renderDashboard(await api("/api/snapshot")); } catch (error) { showError(error.message); toast("Không đọc được snapshot Ubuntu"); } } else if (["ssh","ufw","fail2ban","permissions"].includes(page)) { setupMonitorActions(); await loadMonitor(); } else if (page === "reports") await loadReports(); else if (page === "tests") await loadTests(); };
+  const loadPage = async () => { if (page === "dashboard") { try { renderDashboard(await api("/api/snapshot")); } catch (error) { showError(error.message); toast("Không đọc được snapshot Ubuntu"); } } else if (["ssh","ufw","fail2ban","permissions"].includes(page)) { await loadMonitor(); } else if (page === "reports") await loadReports(); else if (page === "tests") await loadTests(); };
+  setupMonitorActions();
   loadPage();
 })();

@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -Eeuo pipefail
 
-project_dir=$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)
+project_dir=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
 cd "$project_dir"
 
 if [[ "${EUID}" -eq 0 ]]; then
@@ -31,4 +31,4 @@ if ! "$python_bin" -c 'import flask' >/dev/null 2>&1; then
   exit 1
 fi
 
-exec "$python_bin" -m web_dashboard.app --host "${DASHBOARD_HOST:-127.0.0.1}" --port "${DASHBOARD_PORT:-5000}"
+exec "$python_bin" -m app --host "${DASHBOARD_HOST:-127.0.0.1}" --port "${DASHBOARD_PORT:-5000}"

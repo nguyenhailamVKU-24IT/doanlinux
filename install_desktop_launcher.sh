@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 set -Eeuo pipefail
 
-project_dir=$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)
-launcher="$project_dir/web_dashboard/launch_dashboard.sh"
-icon="$project_dir/web_dashboard/assets/security-dashboard.svg"
+project_dir=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
+launcher="$project_dir/launch_dashboard.sh"
+icon="$project_dir/assets/security-dashboard.svg"
 
 if [[ "${EUID}" -eq 0 ]]; then
   echo 'ERROR: Hay chay bang tai khoan Ubuntu thuong, khong dung sudo.' >&2
