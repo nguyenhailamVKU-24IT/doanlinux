@@ -1,0 +1,7 @@
+{% extends "base.html" %}{% block content %}
+<div class="hero-row"><div><p class="lede">Lịch sử các báo cáo được tạo bởi <code>security_audit.sh</code>. Chỉ file audit có tên hợp lệ mới được tải xuống.</p></div></div>
+<section class="panel"><div class="panel-head"><div><span class="section-kicker">REPORT ARCHIVE</span><h3>Audit reports</h3></div><div class="panel-actions"><span class="count-badge" id="reportCount">0 báo cáo</span><button class="refresh-button" id="runAudit">Chạy audit read-only</button></div></div><div class="table-wrap"><table><thead><tr><th>Tên báo cáo</th><th>Thời gian</th><th>Kích thước</th><th></th></tr></thead><tbody id="reportsBody"><tr><td colspan="4" class="empty-state">Đang tải lịch sử…</td></tr></tbody></table></div></section>
+<div class="action-strip report-action"><div><strong>Thao tác an toàn</strong><small>Audit chỉ đọc và tạo snapshot mới; không đổi SSH, UFW, Fail2ban hay tài khoản.</small></div><span class="action-result" id="auditResult">Sẵn sàng chạy</span></div>
+<div class="panel audit-output" id="auditOutputPanel" hidden><div class="panel-head"><div><span class="section-kicker">LATEST RESULT</span><h3>Kết quả lần audit vừa chạy</h3></div></div><pre id="auditOutput"></pre></div>
+<section class="panel report-note"><div class="safe-note"><span>i</span><div><strong>Phạm vi an toàn</strong><small>API chỉ cho phép tên dạng security_audit_YYYYmmdd_HHMMSS.txt và giới hạn trong evidence/security_reports.</small></div></div></section>
+{% endblock %}

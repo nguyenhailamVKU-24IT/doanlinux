@@ -1,0 +1,9 @@
+ID,Title,Expected,Actual,Status,Command_or_location,Evidence
+TC01,Dịch vụ SSH,active và enabled,Dịch vụ SSH: active; tự khởi động: enabled | 2026-11-17T10:37:55+07:00,PASS,systemctl is-active ssh,evidence/tests/snapshot.json
+TC02,Cấu hình SSH,Root login no; key yes; password no; MaxAuthTries 3,"{'maxauthtries': '3', 'passwordauthentication': 'no', 'permitrootlogin': 'no', 'port': '22', 'pubkeyauthentication': 'yes'} | 2026-11-17T10:37:55+07:00",PASS,sshd -T,evidence/tests/snapshot.json
+TC03,Cú pháp SSH,Cấu hình hợp lệ,Kết quả kiểm tra cú pháp SSH | 2026-11-17T10:37:55+07:00,PASS,sshd -t,evidence/tests/snapshot.json
+TC04,Firewall,active; deny incoming; allow outgoing,Kết quả kiểm tra chính sách UFW | 2026-11-17T10:37:55+07:00,PASS,ufw status verbose,evidence/tests/snapshot.json
+TC05,Fail2ban,Jail sshd hoạt động và có bằng chứng ban,"Sau 3 lần đăng nhập sai từ Windows, Fail2ban tự ban 192.168.56.1; TCP/22 bị chặn. Gỡ ban xong kết nối trở lại.",PASS,fail2ban-client status sshd,evidence/tests/fail2ban-ban.txt
+TC06,Quyền file,600; owner đọc được; testuser không đọc được,Mode: 600; owner đọc: True; testuser đọc: False | 2026-11-17T10:37:55+07:00,PASS,/permissions,evidence/tests/snapshot.json
+TC07,Audit report,Tạo và tải được report,Tạo và tải báo cáo thành công,PASS,/reports,evidence/tests/security_audit_20261117_104100.txt
+TC08,Dashboard,Các trang và API phản hồi,7 trang và health API phản hồi đúng,PASS,/api/health,evidence/tests/dashboard-check.txt

@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{ page_title }} · Ubuntu Security Dashboard</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='dashboard.css') }}">
+</head>
+<body data-page="{{ active_page }}">
+  <div class="app-shell">
+    <aside class="sidebar" id="sidebar">
+      <div class="brand"><div class="brand-mark">U</div><div><strong>Ubuntu</strong><span>Security Lab</span></div></div>
+      <div class="sidebar-label">GIÁM SÁT</div>
+      <nav class="nav-list" aria-label="Điều hướng chính">
+        <a class="nav-item" data-page="dashboard" href="/"><span class="nav-icon">⌂</span><span>Tổng quan</span></a>
+        <a class="nav-item" data-page="ssh" href="/ssh"><span class="nav-icon">⌁</span><span>SSH Monitor</span></a>
+        <a class="nav-item" data-page="ufw" href="/ufw"><span class="nav-icon">◈</span><span>UFW Firewall</span></a>
+        <a class="nav-item" data-page="fail2ban" href="/fail2ban"><span class="nav-icon">⊘</span><span>Fail2ban</span></a>
+        <a class="nav-item" data-page="permissions" href="/permissions"><span class="nav-icon">▣</span><span>File Permissions</span></a>
+      </nav>
+      <div class="sidebar-label">BẰNG CHỨNG</div>
+      <nav class="nav-list">
+        <a class="nav-item" data-page="reports" href="/reports"><span class="nav-icon">▤</span><span>Audit Reports</span></a>
+        <a class="nav-item" data-page="tests" href="/tests"><span class="nav-icon">✓</span><span>Test Cases</span></a>
+      </nav>
+      <div class="sidebar-footer"><span class="live-dot"></span><span>Read-only collector</span><small>Ubuntu VM · Local</small></div>
+    </aside>
+    <main class="main-content">
+      <header class="topbar">
+        <button class="menu-toggle" id="menuToggle" aria-label="Mở menu">☰</button>
+        <div><div class="eyebrow">UBUNTU SECURITY PROJECT</div><h1>{{ page_title }}</h1></div>
+        <div class="topbar-actions"><span class="connection"><span class="live-dot"></span> Collector online</span><button class="refresh-button" id="refreshButton">↻ <span>Làm mới</span></button></div>
+      </header>
+      <section class="page-body">{% block content %}{% endblock %}</section>
+      <footer class="footer">Read-only monitoring · Không thay đổi cấu hình hệ thống <span id="lastUpdated">Đang chờ dữ liệu</span></footer>
+    </main>
+  </div>
+  <div class="toast" id="toast" role="status"></div>
+  <script src="{{ url_for('static', filename='dashboard.js') }}"></script>
+</body>
+</html>
